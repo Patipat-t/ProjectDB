@@ -24,18 +24,19 @@
 
 ---
 
-## 🗄 โครงสร้างฐานข้อมูลเชิงสัมพันธ์ (Database Schema - 3NF)
 
-ฐานข้อมูล `ebookstore.db` ประกอบด้วยตารางหลักที่เชื่อมโยงความสัมพันธ์กันอย่างสมบูรณ์ ดังนี้:
-1. **`roles`**: กำหนดระดับสิทธิ์การใช้งาน (Admin = 1, Customer = 2)
-2. **`users`**: จัดเก็บข้อมูลบัญชีผู้ใช้งาน พร้อมระบบบันทึกความยินยอมตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล (**PDPA Consent Logging**)
-3. **`categories`**: จัดหมวดหมู่มังงะและไลท์โนเวล
-4. **`authors`**: ข้อมูลประวัติผู้แต่งและนักเขียน
-5. **`ebooks`**: ตารางหลักเก็บข้อมูลหนังสือ ราคา สถานะเปิด/ปิดการขาย และ Foreign Key เชื่อมไปยังหมวดหมู่กับผู้แต่ง
-6. **`carts` & `cart_items`**: ระบบจัดการตะกร้าสินค้าแบบเชื่อมโยงกับผู้ใช้งานเฉพาะราย
-7. **`orders` & `order_items`**: บันทึกคำสั่งซื้อ รายละเอียดสินค้า ยอดเงินรวม และสถานะออเดอร์ (`pending`, `paid`, `confirmed`, `cancelled`)
-8. **`payments`**: จัดการหลักฐานการชำระเงินผ่าน PromptPay QR Code พร้อมเก็บรูปภาพสลิป (`proof_image`) และสถานะการตรวจสอบ
-9. **`download_links`**: ระบบควบคุมและออกสิทธิ์ลิงก์ดาวน์โหลดไฟล์ E-Book (.cbz) ที่จะปลดล็อกเฉพาะคำสั่งซื้อที่มีสถานะ `confirmed` แล้วเท่านั้น
+## 🗄️ โครงสร้างฐานข้อมูล SQLite 3NF Schema (11 Tables)
+1. `roles` (role_id, role_name)
+2. `users` (user_id, email, password_hash, full_name, phone, role_id, created_at)
+3. `categories` (category_id, category_name)
+4. `authors` (author_id, author_name, bio)
+5. `ebooks` (ebook_id, title, description, price, cover_image_url, is_active, category_id, author_id)
+6. `carts` (cart_id, user_id, updated_at)
+7. `cart_items` (cart_item_id, cart_id, ebook_id, quantity)
+8. `orders` (order_id, order_code, user_id, order_date, total_amount, status)
+9. `order_items` (order_item_id, order_id, ebook_id, quantity, unit_price)
+10. `payments` (payment_id, order_id, payment_method, proof_image, status, paid_at)
+11. `download_links` (download_id, order_id, ebook_id, file_name, file_size, download_url, expires_at)
 
 ---
 
